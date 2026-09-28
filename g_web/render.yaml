@@ -1,0 +1,35 @@
+# One-click deploy on Render: New + > Blueprint > pick this repo.
+# NOTE: a persistent disk requires a paid instance (Starter). Without a disk, data is lost on restart.
+services:
+  - type: web
+    name: lala-restaurant
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    healthCheckPath: /health
+    disk:
+      name: restaurant-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+      - key: DB_PATH
+        value: /data/restaurant.db
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false        # you will be asked to type it in the Render dashboard
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: NOTIFY_EMAIL_TO
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
